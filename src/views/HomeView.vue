@@ -1,85 +1,49 @@
 <template>
-  <div class="container">
+  <v-container>
     <h1>Home page</h1>
 
-    <v-row v-if="productsMockup.length">
-      <v-col lg="4"
-           v-for="(productItem, index) of productsMockup"
-          :key="index"
-      >
-        <v-card
-            :loading="loading"
-            class="mx-auto my-12"
-            max-width="374"
-        >
-          <template v-slot:loader="{ isActive }">
-            <v-progress-linear
-                :active="isActive"
-                color="deep-purple"
-                height="4"
-                indeterminate
-            ></v-progress-linear>
-          </template>
-
-          <v-img
-              cover
-              height="250"
-              :src="productItem.image_url"
-          />
-
-          <v-card-title v-text="productItem.name"/>
-
-          <v-card-text>
-            <v-row
-                align="center"
-                class="mx-0"
-            >
-              <v-rating
-                  :value="productItem.rating"
-                  color="amber"
-                  dense
-                  half-increments
-                  readonly
-                  size="14"
-              ></v-rating>
-            </v-row>
-            <div class="my-4 text-subtitle-1">
-              zł • {{ productItem.cost }}
-            </div>
-          </v-card-text>
-          <v-card-subtitle>
-            <span class="me-1" v-text="productItem.description"/>
-
-            <v-icon
-                color="error"
-                icon="mdi-fire-circle"
-                size="small"
-            ></v-icon>
-          </v-card-subtitle>
-
-          <v-divider class="mx-4 mb-1"></v-divider>
-
-        </v-card>
-      </v-col>
-    </v-row>
-
-  </div>
+    <v-data-table :headers="table.headers" :items="productsMockup" :items-per-page="10" class="elevation-1">
+      <template v-slot:item.image="{ item }">
+        <div class="p-2">
+          <v-img :src="item.image_url" :alt="item.name" width="50px" height="50px"></v-img>
+        </div>
+      </template>
+      <template v-slot:item.btn-add="{ item }">
+        <v-btn icon color="pink">
+          <v-icon>mdi-cart</v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
+  </v-container>
 </template>
 
 <script>
-import {productsMockup} from "@/mockups/products.mockup";
-
+import { productsMockup } from "@/mockups/products.mockup"
 
 export default {
-  name: 'Home',
-  data(){
+  name: "Home",
+  data() {
     return {
       productsMockup: productsMockup,
-      loading: false,
-      selection: 1,
+      table: {
+        headers: [
+          {
+            text: "ID",
+            align: "start",
+            sortable: true,
+            value: "id",
+          },
+          { text: "Name", value: "name", sortable: true },
+          { text: "Cost", value: "cost", sortable: true },
+          { text: "Rating", value: "rating", sortable: true },
+          { text: "Image", value: "image", sortable: false },
+          { text: "Add to cart", value: "btn-add", sortable: false },
+        ],
+      },
     }
   },
-  components: {
+  methods: {
+    addToCart() {},
   },
 }
 </script>

@@ -1,5 +1,6 @@
 export const productsMockup = [
   {
+    id: 1,
     name: "Chicken Alfredo",
     cost: 12.99,
     image_url: "https://bellyfull.net/wp-content/uploads/2021/02/Chicken-Alfredo-blog-4-768x1024.jpg",
@@ -8,6 +9,7 @@ export const productsMockup = [
     rating: 4.5,
   },
   {
+    id: 2,
     name: "Beef Stroganoff",
     cost: 14.99,
     image_url: "https://www.gimmesomeoven.com/wp-content/uploads/2020/10/Beef-Stroganoff-Recipe-9.jpg",
@@ -16,6 +18,7 @@ export const productsMockup = [
     rating: 4.3,
   },
   {
+    id: 3,
     name: "Shrimp Scampi",
     cost: 16.99,
     image_url:
@@ -25,6 +28,7 @@ export const productsMockup = [
     rating: 4.8,
   },
   {
+    id: 4,
     name: "Spicy Tofu Stir Fry",
     cost: 12.99,
     image_url:
@@ -34,6 +38,7 @@ export const productsMockup = [
     rating: 3.9,
   },
   {
+    id: 5,
     name: "Lobster Bisque",
     cost: 18.99,
     image_url: "https://cafedelites.com/wp-content/uploads/2020/02/Lobster-Bisque-IMAGE-2.jpg",
@@ -42,6 +47,7 @@ export const productsMockup = [
     rating: 4.7,
   },
   {
+    id: 6,
     name: "Beef and Vegetable Kabobs",
     cost: 15.99,
     image_url: "https://suebeehomemaker.com/wp-content/uploads/2020/04/grilled-steak-kabobs-with-vegetables.jpg",
@@ -50,6 +56,7 @@ export const productsMockup = [
     rating: 4.1,
   },
   {
+    id: 7,
     name: "Vegetable Curry",
     cost: 13.99,
     image_url: "https://www.recipetineats.com/wp-content/uploads/2017/07/Vegetable-Curry.jpg",
@@ -58,6 +65,7 @@ export const productsMockup = [
     rating: 3.7,
   },
   {
+    id: 8,
     name: "Pan-Seared Salmon",
     cost: 17.99,
     image_url: "https://cafedelites.com/wp-content/uploads/2017/03/Best-Crispy-Lemon-Garlic-Herb-Salmon-IMAGES-19.jpg",
@@ -66,6 +74,7 @@ export const productsMockup = [
     rating: 4.6,
   },
   {
+    id: 9,
     name: "Roasted Vegetable Lasagna",
     cost: 14.99,
     image_url: "https://familystylefood.com/wp-content/uploads/2017/09/roasted-vegetable-lasagna-familystylefood.jpg",
