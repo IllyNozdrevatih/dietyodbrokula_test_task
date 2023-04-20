@@ -110,7 +110,7 @@ export const ordersMockup = [
   {
     id: 6,
     clientId: 1,
-    date: "17.02.22",
+    date: "17.02.23",
     cart: [
       {
         productId: 4,
@@ -176,7 +176,7 @@ export const ordersMockup = [
   {
     id: 9,
     clientId: 2,
-    date: "11.03.22",
+    date: "11.03.23",
     cart: [
       {
         productId: 5,
@@ -218,7 +218,7 @@ export const ordersMockup = [
   {
     id: 11,
     clientId: 2,
-    date: "26.04.22",
+    date: "26.04.23",
     cart: [
       {
         productId: 2,
