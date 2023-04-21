@@ -200,7 +200,6 @@ export default {
       },
       calendar: {
         type: "month",
-        // types: ["month", "week"],
         types: [
           {
             name: "Miesiąc",
@@ -330,7 +329,7 @@ export default {
       return this.clients.map((clientItem) => clientItem.name)
     },
     generateCalendarEvents() {
-      for (const [index, orderItem] of this.orders.entries()) {
+      for (const orderItem of this.orders.entries()) {
         const orderItemEntryDate = this.getEntryDate(orderItem.date)
         const client = this.getClientById(orderItem.clientId)
 
