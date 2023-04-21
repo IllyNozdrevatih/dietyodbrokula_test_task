@@ -503,9 +503,3 @@ export default {
   },
 }
 </script>
-
-<style lang="scss">
-.fs-18 {
-  font-size: 18px;
-}
-</style>
