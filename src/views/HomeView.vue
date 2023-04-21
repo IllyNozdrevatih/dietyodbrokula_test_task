@@ -14,18 +14,36 @@
     </v-data-table>
 
     <v-spacer class="mt-5" />
-    <h2>CF.02 Filter By client</h2>
+    <h2>CF.02 Calendar</h2>
     <v-sheet tile height="54" class="d-flex align-center">
-      <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
-        <v-icon>mdi-chevron-left</v-icon>
-      </v-btn>
-      <v-select v-model="calendar.type" :items="calendar.types" dense outlined hide-details class="ma-2" label="type"></v-select>
-      <v-toolbar-title v-if="$refs.calendar">
-        {{ $refs.calendar.title }}
-      </v-toolbar-title>
-      <v-btn icon class="ma-2" @click="$refs.calendar.next()">
-        <v-icon>mdi-chevron-right</v-icon>
-      </v-btn>
+      <v-row class="align-center">
+        <v-col lg="2">
+          <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
+            <v-icon>mdi-chevron-left</v-icon>
+          </v-btn>
+        </v-col>
+        <v-col lg="5">
+          <v-select
+            v-model="calendar.type"
+            :items="calendar.types"
+            dense
+            outlined
+            hide-details
+            class="ma-2"
+            label="type"
+          ></v-select>
+        </v-col>
+        <v-col lg="3" class="text-center">
+          <v-toolbar-title v-if="$refs.calendar">
+            {{ $refs.calendar.title }}
+          </v-toolbar-title>
+        </v-col>
+        <v-col lg="2" class="text-right">
+          <v-btn icon class="ma-2" @click="$refs.calendar.next()">
+            <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
     </v-sheet>
     <v-sheet height="600">
       <v-calendar
@@ -35,8 +53,30 @@
         :type="calendar.type"
         :events="calendar.events"
         :event-overlap-threshold="30"
-        @change="updateRange"
+        @click:event="calendarShowEvent"
       ></v-calendar>
+      <v-menu v-model="calendar.selectedOpen" :close-on-content-click="false" :activator="calendar.selectedElement" offset-x>
+        <v-card color="grey lighten-4" min-width="350px" flat>
+          <v-toolbar :color="calendar.selectedEvent.color" dark>
+            <v-toolbar-title v-html="calendar.selectedEvent.name"></v-toolbar-title>
+          </v-toolbar>
+          <v-card-text>
+            <span>Address: {{ calendar.selectedEvent.address }}</span>
+            <h3>Order</h3>
+            <div
+              v-for="(cartItem, index) of getOrderCartById(calendar.selectedEvent.orderId)"
+              :key="`calendar-cart-item-${index}`"
+              class="d-flex"
+            >
+              <div class="pr-2">{{ getProductById(cartItem.productId).name }}:</div>
+              <div v-text="cartItem.count"></div>
+            </div>
+          </v-card-text>
+          <v-card-actions>
+            <v-btn text color="secondary" @click="calendar.selectedOpen = false"> Cancel </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-menu>
     </v-sheet>
     <v-spacer class="mt-5" />
     <h2>CF.03 Filter By client</h2>
@@ -46,15 +86,19 @@
       v-if="tableClients.clientId !== null"
       :headers="tableClients.headers"
       :items="getOrdersByClientId(tableClients.clientId)"
+      :itemsPerPage="5"
     >
       <template v-slot:item.date="{ item }">
         <div v-text="new Date(item.date).toLocaleDateString('pl-PL')" />
       </template>
       <template v-slot:item.cart="{ item }">
-        <div v-for="(productOrderObject, index) of item.cart" :key="`product-order-${index}`" class="d-flex">
+        <div v-for="(productOrderObject, index) of item.cart" :key="`client-product-order-${index}`" class="d-flex">
           <div class="pr-2" v-text="getProductById(productOrderObject.productId).name" />
           <div v-text="productOrderObject.count"></div>
         </div>
+      </template>
+      <template v-slot:item.orders="{ item }">
+        <div v-text="getCountCartOrders(item.cart)" />
       </template>
       <template v-slot:item.cost="{ item }">
         <div v-text="getCostCartOrders(item.cart)" />
@@ -93,7 +137,7 @@
         </v-col>
       </v-row>
     </v-sheet>
-    <v-data-table :items="tableFilteredOrders.orders" :headers="tableFilteredOrders.headers">
+    <v-data-table :items="tableFilteredOrders.orders" :headers="tableFilteredOrders.headers" :itemsPerPage="5">
       <template v-slot:item.date="{ item }">
         <div v-text="new Date(item.date).toLocaleDateString('pl-PL')" />
       </template>
@@ -102,7 +146,7 @@
       </template>
       <template v-slot:item.cart="{ item }">
         <div v-for="(productOrderObject, index) of item.cart" :key="`product-order-${index}`" class="d-flex">
-          <div class="pr-2" v-text="getProductById(productOrderObject.productId).name" />
+          <div class="pr-2">{{ getProductById(productOrderObject.productId).name }}:</div>
           <div v-text="productOrderObject.count"></div>
         </div>
       </template>
@@ -121,6 +165,7 @@ import { productsMockup } from "@/mockups/products.mockup"
 import { clientMockup } from "@/mockups/client.mockup"
 import { ordersMockup } from "@/mockups/orders.mockup"
 import { uniqBy } from "lodash"
+import { getRandomArbitrary } from "@/mockups/orders.generator"
 
 export default {
   name: "Home",
@@ -154,6 +199,9 @@ export default {
         events: [],
         colors: ["blue", "indigo", "green", "orange", "grey darken-1"],
         names: [],
+        selectedEvent: {},
+        selectedOpen: false,
+        selectedElement: null,
       },
       tableClients: {
         clientId: null,
@@ -172,6 +220,11 @@ export default {
           {
             text: "Cart",
             value: "cart",
+            sortable: false,
+          },
+          {
+            text: "Orders",
+            value: "orders",
             sortable: false,
           },
           {
@@ -214,14 +267,6 @@ export default {
       this.tableFilteredOrders.startMonthsAutocomplete = this.getAutocompleteMonths()
       this.tableFilteredOrders.endMonthsAutocomplete = this.getAutocompleteMonths()
 
-      // this.tableFilteredOrders.startMonths = this.tableFilteredOrders.startMonthsAutocomplete[0]
-      // const lastFilteredMonthIndex = this.tableFilteredOrders.endMonthsAutocomplete.length - 1
-      // this.tableFilteredOrders.endMonths = this.tableFilteredOrders.endMonthsAutocomplete[lastFilteredMonthIndex]
-      //
-      // this.updateTableFilteredOrdersByDate({
-      //   startDate: this.tableFilteredOrders.startMonths,
-      //   endDate: this.tableFilteredOrders.endMonths,
-      // })
       this.tableFilteredOrders.products = this.getProductIDsArray()
     },
     getProductOrdersById(productId) {
@@ -236,6 +281,11 @@ export default {
       }
       return countProductOrders
     },
+    getOrderCartById(orderId) {
+      const orderIndex = this.orders.findIndex((orderItem) => orderItem.id === orderId)
+      if (orderIndex === -1) return []
+      return this.orders[orderIndex].cart
+    },
     getOrdersByClientId(clientId) {
       const clientOrders = []
 
@@ -244,6 +294,7 @@ export default {
 
         if (isClientOrder) clientOrders.push(orderItem)
       }
+
       return clientOrders
     },
     getClientById(clientId) {
@@ -253,7 +304,9 @@ export default {
     },
     getProductById(productId) {
       const productIndex = this.products.findIndex((productItem) => productItem.id === productId)
-      return this.products[productIndex]
+
+      if (productIndex !== -1) return this.products[productIndex]
+      return null
     },
     getClientsNames() {
       if (this.clients.length === 0) return []
@@ -262,14 +315,33 @@ export default {
     generateCalendarEvents() {
       for (const [index, orderItem] of this.orders.entries()) {
         const orderItemEntryDate = this.getEntryDate(orderItem.date)
+        const client = this.getClientById(orderItem.clientId)
 
         this.calendar.events.push({
-          name: this.getClientById(orderItem.clientId).name,
+          orderId: orderItem.id,
+          name: client.name,
+          address: client.address,
           start: orderItemEntryDate,
           end: orderItemEntryDate,
-          color: this.calendar.colors[index],
+          color: this.calendar.colors[getRandomArbitrary(0, 5)],
         })
       }
+    },
+    calendarShowEvent({ nativeEvent, event }) {
+      const open = () => {
+        this.calendar.selectedEvent = event
+        this.calendar.selectedElement = nativeEvent.target
+        requestAnimationFrame(() => requestAnimationFrame(() => (this.calendar.selectedOpen = true)))
+      }
+
+      if (this.calendar.selectedOpen) {
+        this.calendar.selectedOpen = false
+        requestAnimationFrame(() => requestAnimationFrame(() => open()))
+      } else {
+        open()
+      }
+
+      nativeEvent.stopPropagation()
     },
     getAutocompleteProducts() {
       return this.products.map((productsItem) => {
@@ -398,9 +470,12 @@ export default {
       return count
     },
     getCostCartOrders(cartOrders) {
+      if (!cartOrders) return 0
       let cost = 0
       cartOrders.forEach((orderItem) => {
         const productItem = this.getProductById(orderItem.productId)
+        if (!productItem) return
+
         cost += orderItem.count * productItem.cost
       })
       return Math.floor(cost)
@@ -412,4 +487,8 @@ export default {
 }
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.fs-18 {
+  font-size: 18px;
+}
+</style>
