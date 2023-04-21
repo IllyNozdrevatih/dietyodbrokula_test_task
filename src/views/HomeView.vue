@@ -47,6 +47,9 @@
       :headers="tableClients.headers"
       :items="getOrdersByClientId(tableClients.clientId)"
     >
+      <template v-slot:item.date="{ item }">
+        <div v-text="new Date(item.date).toLocaleDateString('pl-PL')" />
+      </template>
       <template v-slot:item.cart="{ item }">
         <div v-for="(productOrderObject, index) of item.cart" :key="`product-order-${index}`" class="d-flex">
           <div class="pr-2" v-text="getProductById(productOrderObject.productId).name" />
