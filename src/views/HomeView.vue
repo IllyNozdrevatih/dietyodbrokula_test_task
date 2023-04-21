@@ -80,7 +80,7 @@
             </div>
           </v-card-text>
           <v-card-actions>
-            <v-btn text color="secondary" @click="calendar.selectedOpen = false"> Cancel </v-btn>
+            <v-btn text color="secondary" @click="calendar.selectedOpen = false"> Anulować </v-btn>
           </v-card-actions>
         </v-card>
       </v-menu>
