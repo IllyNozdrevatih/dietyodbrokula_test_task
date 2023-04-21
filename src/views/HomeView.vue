@@ -53,6 +53,9 @@
           <div v-text="productOrderObject.count"></div>
         </div>
       </template>
+      <template v-slot:item.cost="{ item }">
+        <div v-text="getCostCartOrders(item.cart)" />
+      </template>
     </v-data-table>
 
     <v-spacer class="mt-5" />
@@ -102,6 +105,9 @@
       </template>
       <template v-slot:item.orders="{ item }">
         <div v-text="getCountCartOrders(item.cart)" />
+      </template>
+      <template v-slot:item.cost="{ item }">
+        <div v-text="getCostCartOrders(item.cart)" />
       </template>
     </v-data-table>
   </v-container>
@@ -165,6 +171,11 @@ export default {
             value: "cart",
             sortable: false,
           },
+          {
+            text: "Cost",
+            value: "cost",
+            sortable: false,
+          },
         ],
       },
       tableFilteredOrders: {
@@ -179,6 +190,7 @@ export default {
           { text: "Client name", value: "clientId", sortable: false },
           { text: "Cart", value: "cart", sortable: false },
           { text: "Orders", value: "orders", sortable: false },
+          { text: "Cost", value: "cost", sortable: false },
         ],
         products: [],
         startMonths: null,
@@ -331,11 +343,17 @@ export default {
         endDate: this.tableFilteredOrders.endMonths,
       })
     },
-    async handleSelectTableFilteredProducts(selectedProduct) {
+    handleSelectTableFilteredProducts(selectedProduct) {
       if (this.tableFilteredOrders.startMonths === null && this.tableFilteredOrders.endMonths === null) {
         return
       }
+
       this.updateTableFilteredOrdersByProducts({ selectedProduct })
+
+      this.updateTableFilteredOrdersByDate({
+        startDate: this.tableFilteredOrders.startMonths,
+        endDate: this.tableFilteredOrders.endMonths,
+      })
     },
     updateTableFilteredOrdersByProducts({ selectedProduct }) {
       const filteredOrder = []
@@ -353,7 +371,7 @@ export default {
       this.tableFilteredOrders.orders = filteredOrder
     },
     updateTableFilteredOrdersByDate({ startDate, endDate }) {
-      this.tableFilteredOrders.orders = this.orders.filter((orderItem) => {
+      this.tableFilteredOrders.orders = this.tableFilteredOrders.orders.filter((orderItem) => {
         const orderDateEntry = this.getEntryDate(orderItem.date)
         const startDateEntry = this.getEntryDate(startDate)
         const endDateEntry = this.getEntryDate(endDate)
@@ -375,6 +393,14 @@ export default {
       let count = 0
       cartOrders.forEach((orderItem) => (count += orderItem.count))
       return count
+    },
+    getCostCartOrders(cartOrders) {
+      let cost = 0
+      cartOrders.forEach((orderItem) => {
+        const productItem = this.getProductById(orderItem.productId)
+        cost += orderItem.count * productItem.cost
+      })
+      return Math.floor(cost)
     },
     getEntryDate(date) {
       return new Date(date)
