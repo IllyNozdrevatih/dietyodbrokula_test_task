@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "@types/lodash.uniqby": "^4.7.7",
+    "apexcharts": "^3.39.0",
     "core-js": "^3.8.3",
     "prettier": "^2.8.7",
     "vue": "^2.6.14",
+    "vue-apexcharts": "^1.6.2",
     "vue-router": "^3.5.1",
     "vuetify": "^2.6.0",
     "vuex": "^3.6.2"
