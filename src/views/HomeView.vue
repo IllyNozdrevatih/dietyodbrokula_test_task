@@ -57,10 +57,15 @@
 
     <v-spacer class="mt-5" />
     <h2>CF.04 Goal orders with filters</h2>
-    <v-sheet tile height="54" class="d-flex align-center">
+    <v-sheet tile class="d-flex align-center">
       <v-row>
         <v-col lg="6">
-          <v-autocomplete v-model="tableFilteredOrders.products" :items="getAutocompleteProducts()" multiple></v-autocomplete>
+          <v-autocomplete
+            v-model="tableFilteredOrders.products"
+            :items="getAutocompleteProducts()"
+            @change="handleSelectTableFilteredProducts"
+            multiple
+          ></v-autocomplete>
         </v-col>
         <v-col lg="3">
           <v-select
@@ -83,9 +88,21 @@
       </v-row>
     </v-sheet>
     <v-data-table :items="tableFilteredOrders.orders" :headers="tableFilteredOrders.headers">
-      <!--      <template v-slot:item.cart="{ item }">-->
-      <!--        <div class="p-2" v-text="getProductOrdersById(item.id)" />-->
-      <!--      </template>-->
+      <template v-slot:item.date="{ item }">
+        <div v-text="new Date(item.date).toLocaleDateString('pl-PL')" />
+      </template>
+      <template v-slot:item.clientId="{ item }">
+        <div v-text="getClientById(item.clientId).name" />
+      </template>
+      <template v-slot:item.cart="{ item }">
+        <div v-for="(productOrderObject, index) of item.cart" :key="`product-order-${index}`" class="d-flex">
+          <div class="pr-2" v-text="getProductById(productOrderObject.productId).name" />
+          <div v-text="productOrderObject.count"></div>
+        </div>
+      </template>
+      <template v-slot:item.orders="{ item }">
+        <div v-text="getCountCartOrders(item.cart)" />
+      </template>
     </v-data-table>
   </v-container>
 </template>
@@ -159,11 +176,14 @@ export default {
             value: "id",
           },
           { text: "Date", value: "date", sortable: true },
+          { text: "Client name", value: "clientId", sortable: false },
+          { text: "Cart", value: "cart", sortable: false },
+          { text: "Orders", value: "orders", sortable: false },
         ],
         products: [],
-        startMonths: {},
+        startMonths: null,
         startMonthsAutocomplete: [],
-        endMonths: {},
+        endMonths: null,
         endMonthsAutocomplete: [],
         rangeMonths: [],
         orders: [],
@@ -183,10 +203,11 @@ export default {
       // const lastFilteredMonthIndex = this.tableFilteredOrders.endMonthsAutocomplete.length - 1
       // this.tableFilteredOrders.endMonths = this.tableFilteredOrders.endMonthsAutocomplete[lastFilteredMonthIndex]
       //
-      // this.updateTableFilteredOrders({
+      // this.updateTableFilteredOrdersByDate({
       //   startDate: this.tableFilteredOrders.startMonths,
       //   endDate: this.tableFilteredOrders.endMonths,
       // })
+      this.tableFilteredOrders.products = this.getProductIDsArray()
     },
     getProductOrdersById(productId) {
       let countProductOrders = 0
@@ -212,6 +233,7 @@ export default {
     },
     getClientById(clientId) {
       const clientIndex = this.clients.findIndex((clientItem) => clientItem.id === clientId)
+
       return this.clients[clientIndex]
     },
     getProductById(productId) {
@@ -224,13 +246,12 @@ export default {
     },
     generateCalendarEvents() {
       for (const [index, orderItem] of this.orders.entries()) {
-        const myDate = orderItem.date.split(".")
-        const newDate = new Date(`20${myDate[2]}`, myDate[1] - 1, myDate[0])
+        const orderItemEntryDate = this.getEntryDate(orderItem.date)
 
         this.calendar.events.push({
           name: this.getClientById(orderItem.clientId).name,
-          start: newDate,
-          end: newDate,
+          start: orderItemEntryDate,
+          end: orderItemEntryDate,
           color: this.calendar.colors[index],
         })
       }
@@ -247,11 +268,10 @@ export default {
       const autocompleteMonthList = []
 
       for (const orderItem of this.orders) {
-        const myDate = orderItem.date.split(".")
-        const newDate = new Date(`20${myDate[2]}`, myDate[1] - 1, myDate[0])
+        const orderItemEntryDate = this.getEntryDate(orderItem.date)
 
         const monthObject = {
-          text: newDate.toLocaleDateString("pl-PL", { month: "long", year: "numeric" }),
+          text: orderItemEntryDate.toLocaleDateString("pl-PL", { month: "long", year: "numeric" }),
           value: orderItem.date,
           disabled: false,
         }
@@ -260,14 +280,11 @@ export default {
 
       const uniqueMonthList = uniqBy(autocompleteMonthList, "text")
 
-      uniqueMonthList.sort(function (a, b) {
-        const firstDate = a.value.split(".")
-        const firstNewDate = new Date(`20${firstDate[2]}`, firstDate[1] - 1, firstDate[0])
+      uniqueMonthList.sort((a, b) => {
+        const firstEntryDate = this.getEntryDate(a.value)
+        const secondEntryDate = this.getEntryDate(b.value)
 
-        const secondDate = b.value.split(".")
-        const secondNewDate = new Date(`20${secondDate[2]}`, secondDate[1] - 1, secondDate[0])
-
-        return firstNewDate - secondNewDate
+        return firstEntryDate - secondEntryDate
       })
 
       return uniqueMonthList
@@ -279,6 +296,19 @@ export default {
       for (let i = selectedDateIndex - 1; i >= 0; i--) {
         this.tableFilteredOrders.endMonthsAutocomplete[i].disabled = true
       }
+
+      if (this.tableFilteredOrders.endMonths === null) {
+        this.tableFilteredOrders.endMonths = this.getTableFilteredLastMonth().value
+      }
+
+      this.updateTableFilteredOrdersByDate({
+        startDate: this.tableFilteredOrders.startMonths,
+        endDate: this.tableFilteredOrders.endMonths,
+      })
+
+      this.updateTableFilteredOrdersByProducts({
+        selectedProduct: this.tableFilteredOrders.products,
+      })
     },
     handleSelectTableFilteredOrdersTo(selectedDate) {
       const selectedDateIndex = this.tableFilteredOrders.startMonthsAutocomplete.findIndex((item) => item.value === selectedDate)
@@ -288,24 +318,66 @@ export default {
         this.tableFilteredOrders.startMonthsAutocomplete[i].disabled = false
       }
 
-      this.updateTableFilteredOrders({
+      if (this.tableFilteredOrders.startMonths === null) {
+        this.tableFilteredOrders.startMonths = this.getTableFilteredFirstMonth().value
+      }
+
+      this.updateTableFilteredOrdersByDate({
         startDate: this.tableFilteredOrders.startMonths,
         endDate: this.tableFilteredOrders.endMonths,
       })
+
+      this.updateTableFilteredOrdersByProducts({
+        selectedProduct: this.tableFilteredOrders.products,
+      })
     },
-    updateTableFilteredOrders({ startDate, endDate }) {
+    async handleSelectTableFilteredProducts(selectedProduct) {
+      if (this.tableFilteredOrders.startMonths === null && this.tableFilteredOrders.endMonths === null) {
+        return
+      }
+      this.updateTableFilteredOrdersByProducts({ selectedProduct })
+    },
+    updateTableFilteredOrdersByProducts({ selectedProduct }) {
+      const filteredOrder = []
+
+      for (const orderItem of this.orders) {
+        // deep copy
+        const orderItemCopy = JSON.parse(JSON.stringify(orderItem))
+
+        orderItemCopy.cart = orderItemCopy.cart.filter((cartItem) => {
+          return selectedProduct.includes(cartItem.productId)
+        })
+        if (orderItemCopy.cart.length > 0) filteredOrder.push(orderItemCopy)
+      }
+
+      this.tableFilteredOrders.orders = filteredOrder
+    },
+    updateTableFilteredOrdersByDate({ startDate, endDate }) {
       this.tableFilteredOrders.orders = this.orders.filter((orderItem) => {
-        const orderDateArray = orderItem.date.split(".")
-        const orderDateEntry = new Date(`20${orderDateArray[2]}`, orderDateArray[1] - 1, orderDateArray[0])
-
-        const startDateArray = startDate.split(".")
-        const startDateEntry = new Date(`20${startDateArray[2]}`, startDateArray[1] - 1, startDateArray[0])
-
-        const endDateArray = endDate.split(".")
-        const endDateEntry = new Date(`20${endDateArray[2]}`, endDateArray[1] - 1, endDateArray[0])
+        const orderDateEntry = this.getEntryDate(orderItem.date)
+        const startDateEntry = this.getEntryDate(startDate)
+        const endDateEntry = this.getEntryDate(endDate)
 
         return orderDateEntry >= startDateEntry && orderDateEntry <= endDateEntry
       })
+    },
+    getTableFilteredFirstMonth() {
+      return this.tableFilteredOrders.startMonthsAutocomplete[0]
+    },
+    getTableFilteredLastMonth() {
+      const lastMonthIndex = this.tableFilteredOrders.startMonthsAutocomplete.length - 1
+      return this.tableFilteredOrders.startMonthsAutocomplete[lastMonthIndex]
+    },
+    getProductIDsArray() {
+      return this.products.map((productItem) => productItem.id)
+    },
+    getCountCartOrders(cartOrders) {
+      let count = 0
+      cartOrders.forEach((orderItem) => (count += orderItem.count))
+      return count
+    },
+    getEntryDate(date) {
+      return new Date(date)
     },
   },
 }

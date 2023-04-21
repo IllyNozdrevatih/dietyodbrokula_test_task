@@ -3,7 +3,7 @@ export const ordersMockup = [
   {
     id: 1,
     clientId: 1,
-    date: "19.07.22",
+    date: "2022-07-19T20:48:00.000Z",
     cart: [
       {
         productId: 1,
@@ -22,7 +22,7 @@ export const ordersMockup = [
   {
     id: 2,
     clientId: 1,
-    date: "25.09.22",
+    date: "2022-09-25T20:48:00.000Z",
     cart: [
       {
         productId: 1,
@@ -45,7 +45,7 @@ export const ordersMockup = [
   {
     id: 3,
     clientId: 1,
-    date: "17.11.22",
+    date: "2022-11-17T20:48:00.000Z",
     cart: [
       {
         productId: 3,
@@ -68,7 +68,7 @@ export const ordersMockup = [
   {
     id: 4,
     clientId: 1,
-    date: "10.06.22",
+    date: "2022-06-10T20:48:00.000Z",
     cart: [
       {
         productId: 5,
@@ -87,7 +87,7 @@ export const ordersMockup = [
   {
     id: 5,
     clientId: 1,
-    date: "05.09.22",
+    date: "2022-09-05T20:48:00.000Z",
     cart: [
       {
         productId: 4,
@@ -110,7 +110,7 @@ export const ordersMockup = [
   {
     id: 6,
     clientId: 1,
-    date: "17.02.23",
+    date: "2023-02-17T20:48:00.000Z",
     cart: [
       {
         productId: 4,
@@ -134,7 +134,7 @@ export const ordersMockup = [
   {
     id: 7,
     clientId: 2,
-    date: "22.08.22",
+    date: "2022-08-22T20:48:00.000Z",
     cart: [
       {
         productId: 5,
@@ -153,7 +153,7 @@ export const ordersMockup = [
   {
     id: 8,
     clientId: 2,
-    date: "15.06.22",
+    date: "2022-06-15T20:48:00.000Z",
     cart: [
       {
         productId: 5,
@@ -176,7 +176,7 @@ export const ordersMockup = [
   {
     id: 9,
     clientId: 2,
-    date: "11.03.23",
+    date: "2023-03-11T20:48:00.000Z",
     cart: [
       {
         productId: 5,
@@ -199,7 +199,7 @@ export const ordersMockup = [
   {
     id: 10,
     clientId: 2,
-    date: "19.05.22",
+    date: "2023-03-11T20:48:00.000Z",
     cart: [
       {
         productId: 3,
@@ -218,7 +218,7 @@ export const ordersMockup = [
   {
     id: 11,
     clientId: 2,
-    date: "26.04.23",
+    date: "2023-04-26T20:48:00.000Z",
     cart: [
       {
         productId: 2,
@@ -241,7 +241,7 @@ export const ordersMockup = [
   {
     id: 12,
     clientId: 2,
-    date: "17.07.22",
+    date: "2022-07-17T20:48:00.000Z",
     cart: [
       {
         productId: 7,
