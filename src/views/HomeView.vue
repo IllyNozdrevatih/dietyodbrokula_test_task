@@ -319,7 +319,6 @@ export default {
   },
   methods: {
     init() {
-      // console.log("apexchart", this.$refs.apexchart.updateOptions)
       this.$refs.calendar.checkChange()
       this.calendar.names = this.getClientsNames()
       this.generateCalendarEvents()
@@ -586,9 +585,15 @@ export default {
     },
     getFilteredOrdersByDate({ startDate, endDate }, orders) {
       return orders.filter((orderItem) => {
-        const orderDateEntry = this.getEntryDate(orderItem.date)
-        const startDateEntry = this.getEntryDate(startDate)
-        const endDateEntry = this.getEntryDate(endDate)
+        const orderDateEntry = new Date(orderItem.date)
+
+        const startDateYear = new Date(startDate).getFullYear()
+        const startDateMonth = new Date(startDate).getMonth()
+        const startDateEntry = new Date(startDateYear, startDateMonth, 1)
+
+        const endDateYear = new Date(endDate).getFullYear()
+        const endDateMonth = new Date(endDate).getMonth()
+        const endDateEntry = new Date(endDateYear, endDateMonth + 1, 0)
 
         return orderDateEntry >= startDateEntry && orderDateEntry <= endDateEntry
       })
