@@ -301,13 +301,13 @@ export default {
         this.tableFilteredOrders.endMonths = this.getTableFilteredLastMonth().value
       }
 
+      this.updateTableFilteredOrdersByProducts({
+        selectedProduct: this.tableFilteredOrders.products,
+      })
+
       this.updateTableFilteredOrdersByDate({
         startDate: this.tableFilteredOrders.startMonths,
         endDate: this.tableFilteredOrders.endMonths,
-      })
-
-      this.updateTableFilteredOrdersByProducts({
-        selectedProduct: this.tableFilteredOrders.products,
       })
     },
     handleSelectTableFilteredOrdersTo(selectedDate) {
@@ -322,13 +322,13 @@ export default {
         this.tableFilteredOrders.startMonths = this.getTableFilteredFirstMonth().value
       }
 
+      this.updateTableFilteredOrdersByProducts({
+        selectedProduct: this.tableFilteredOrders.products,
+      })
+
       this.updateTableFilteredOrdersByDate({
         startDate: this.tableFilteredOrders.startMonths,
         endDate: this.tableFilteredOrders.endMonths,
-      })
-
-      this.updateTableFilteredOrdersByProducts({
-        selectedProduct: this.tableFilteredOrders.products,
       })
     },
     async handleSelectTableFilteredProducts(selectedProduct) {
