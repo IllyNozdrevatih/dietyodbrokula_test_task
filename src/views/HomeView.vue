@@ -329,7 +329,7 @@ export default {
       return this.clients.map((clientItem) => clientItem.name)
     },
     generateCalendarEvents() {
-      for (const orderItem of this.orders.entries()) {
+      for (const orderItem of this.orders) {
         const orderItemEntryDate = this.getEntryDate(orderItem.date)
         const client = this.getClientById(orderItem.clientId)
 
