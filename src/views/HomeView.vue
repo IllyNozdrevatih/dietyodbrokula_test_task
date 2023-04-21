@@ -89,12 +89,7 @@
     <h2>CF.03 Filtrowanie raportu sprzedażowego po klientach (lista rozwijana)</h2>
 
     <v-select v-model="tableClients.clientId" :items="clients" label="Klient" item-text="name" item-value="id" clearable />
-    <v-data-table
-      v-if="tableClients.clientId !== null"
-      :headers="tableClients.headers"
-      :items="getOrdersByClientId(tableClients.clientId)"
-      :itemsPerPage="5"
-    >
+    <v-data-table :headers="tableClients.headers" :items="getOrdersByClientId(tableClients.clientId)" :itemsPerPage="5">
       <template v-slot:item.date="{ item }">
         <div v-text="new Date(item.date).toLocaleDateString('pl-PL')" />
       </template>
