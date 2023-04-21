@@ -1,7 +1,7 @@
 <template>
   <v-container>
-    <h1>Report</h1>
-    <h2>CF.01 Amount orders</h2>
+    <h1>Zadanie testowe</h1>
+    <h2>CF.01 Prezentowanie produktów i wartości liczbowych dotyczących sprzedaży</h2>
     <v-data-table :headers="tableOrders.headers" :items="products" :items-per-page="10" class="elevation-1">
       <template v-slot:item.image="{ item }">
         <div class="p-2">
@@ -14,7 +14,11 @@
     </v-data-table>
 
     <v-spacer class="mt-5" />
-    <h2>CF.02 Calendar</h2>
+    <h2>CF.02 kalendarz</h2>
+    <p>
+      Funkcjonalność generowania raportu dla wybranego miesiąca i roku lub na bazie określonego przedziału dat z wykorzystaniem
+      komponentu kalendarza
+    </p>
     <v-sheet tile height="54" class="d-flex align-center">
       <v-row class="align-center">
         <v-col lg="2">
@@ -25,12 +29,15 @@
         <v-col lg="5">
           <v-select
             v-model="calendar.type"
+            locale="pl"
             :items="calendar.types"
+            item-text="name"
+            item-value="type"
             dense
             outlined
             hide-details
             class="ma-2"
-            label="type"
+            label="Wygląd"
           ></v-select>
         </v-col>
         <v-col lg="3" class="text-center">
@@ -61,8 +68,8 @@
             <v-toolbar-title v-html="calendar.selectedEvent.name"></v-toolbar-title>
           </v-toolbar>
           <v-card-text>
-            <span>Address: {{ calendar.selectedEvent.address }}</span>
-            <h3>Order</h3>
+            <span>Adres: {{ calendar.selectedEvent.address }}</span>
+            <h3>Zamówienie</h3>
             <div
               v-for="(cartItem, index) of getOrderCartById(calendar.selectedEvent.orderId)"
               :key="`calendar-cart-item-${index}`"
@@ -79,9 +86,9 @@
       </v-menu>
     </v-sheet>
     <v-spacer class="mt-5" />
-    <h2>CF.03 Filter By client</h2>
+    <h2>CF.03 Filtrowanie raportu sprzedażowego po klientach (lista rozwijana)</h2>
 
-    <v-select v-model="tableClients.clientId" :items="clients" label="Client" item-text="name" item-value="id" clearable />
+    <v-select v-model="tableClients.clientId" :items="clients" label="Klient" item-text="name" item-value="id" clearable />
     <v-data-table
       v-if="tableClients.clientId !== null"
       :headers="tableClients.headers"
@@ -93,7 +100,7 @@
       </template>
       <template v-slot:item.cart="{ item }">
         <div v-for="(productOrderObject, index) of item.cart" :key="`client-product-order-${index}`" class="d-flex">
-          <div class="pr-2" v-text="getProductById(productOrderObject.productId).name" />
+          <div class="pr-2">{{ getProductById(productOrderObject.productId).name }}:</div>
           <div v-text="productOrderObject.count"></div>
         </div>
       </template>
@@ -106,7 +113,7 @@
     </v-data-table>
 
     <v-spacer class="mt-5" />
-    <h2>CF.04 Goal orders with filters</h2>
+    <h2>CF.04 Podsumowanie sprzedaży (łączna ilość / łączna kwota) dla aktualnie ustawionych filtrów</h2>
     <v-sheet tile class="d-flex align-center">
       <v-row>
         <v-col lg="6">
@@ -121,7 +128,7 @@
           <v-select
             v-model="tableFilteredOrders.startMonths"
             :items="tableFilteredOrders.startMonthsAutocomplete"
-            label="From"
+            label="Od"
             item-text="text"
             @change="handleSelectTableFilteredOrdersFrom"
           ></v-select>
@@ -130,7 +137,7 @@
           <v-select
             v-model="tableFilteredOrders.endMonths"
             :items="tableFilteredOrders.endMonthsAutocomplete"
-            label="To"
+            label="Do"
             item-text="text"
             @change="handleSelectTableFilteredOrdersTo"
           ></v-select>
@@ -185,15 +192,25 @@ export default {
             sortable: true,
             value: "id",
           },
-          { text: "Name", value: "name", sortable: true },
-          { text: "Cost", value: "cost", sortable: true },
-          { text: "Image", value: "image", sortable: false },
-          { text: "Orders", value: "orders", sortable: false },
+          { text: "Produkt", value: "name", sortable: true },
+          { text: "Сena", value: "cost", sortable: true },
+          { text: "Portret", value: "image", sortable: false },
+          { text: "Zamówienie", value: "orders", sortable: false },
         ],
       },
       calendar: {
         type: "month",
-        types: ["month", "week"],
+        // types: ["month", "week"],
+        types: [
+          {
+            name: "Miesiąc",
+            type: "month",
+          },
+          {
+            name: "Tydzień",
+            type: "week",
+          },
+        ],
         weekday: [0, 1, 2, 3, 4, 5, 6],
         value: "",
         events: [],
@@ -213,22 +230,22 @@ export default {
             value: "id",
           },
           {
-            text: "Date",
+            text: "Data",
             sortable: true,
             value: "date",
           },
           {
-            text: "Cart",
+            text: "Zamówienie",
             value: "cart",
             sortable: false,
           },
           {
-            text: "Orders",
+            text: "Łączna ilość",
             value: "orders",
             sortable: false,
           },
           {
-            text: "Cost",
+            text: "Kwota",
             value: "cost",
             sortable: false,
           },
@@ -242,11 +259,11 @@ export default {
             sortable: true,
             value: "id",
           },
-          { text: "Date", value: "date", sortable: true },
-          { text: "Client name", value: "clientId", sortable: false },
-          { text: "Cart", value: "cart", sortable: false },
-          { text: "Orders", value: "orders", sortable: false },
-          { text: "Cost", value: "cost", sortable: false },
+          { text: "Data", value: "date", sortable: true },
+          { text: "Klient", value: "clientId", sortable: false },
+          { text: "Zamówienie", value: "cart", sortable: false },
+          { text: "Łączna ilość", value: "orders", sortable: false },
+          { text: "Kwota", value: "cost", sortable: false },
         ],
         products: [],
         startMonths: null,
