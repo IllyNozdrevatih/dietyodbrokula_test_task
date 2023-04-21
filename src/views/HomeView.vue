@@ -19,7 +19,7 @@
       Funkcjonalność generowania raportu dla wybranego miesiąca i roku lub na bazie określonego przedziału dat z wykorzystaniem
       komponentu kalendarza
     </p>
-    <v-sheet tile height="54" class="d-flex align-center">
+    <v-sheet tile class="d-flex align-center">
       <v-row class="align-center">
         <v-col lg="2">
           <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
