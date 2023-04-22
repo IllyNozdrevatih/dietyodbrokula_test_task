@@ -17,29 +17,29 @@
     <v-dialog v-model="dialog.show" width="auto">
       <v-card>
         <v-card-actions>
-          <v-row>
-            <v-col lg="6">
-              <v-text-field
-                v-model="dialog.selectedProduct.name"
-                :rules="form.rules.name"
-                counter="20"
-                hint="This field uses counter prop"
-                label="Produkt"
-                @update:error="errorNameHandle"
-              ></v-text-field>
-            </v-col>
-            <v-col lg="6">
-              <v-text-field
-                v-model="dialog.selectedProduct.cost"
-                :rules="form.rules.cost"
-                type="number"
-                counter="6"
-                hint="This field uses counter prop"
-                label="Сena"
-                @update:error="errorCostHandle"
-              ></v-text-field
-            ></v-col>
-          </v-row>
+          <v-form ref="form">
+            <v-row>
+              <v-col lg="6">
+                <v-text-field
+                  v-model="dialog.selectedProduct.name"
+                  :rules="form.rules.name"
+                  counter="20"
+                  hint="This field uses counter prop"
+                  label="Produkt"
+                ></v-text-field>
+              </v-col>
+              <v-col lg="6">
+                <v-text-field
+                  v-model="dialog.selectedProduct.cost"
+                  :rules="form.rules.cost"
+                  type="number"
+                  counter="6"
+                  hint="This field uses counter prop"
+                  label="Сena"
+                ></v-text-field
+              ></v-col>
+            </v-row>
+          </v-form>
         </v-card-actions>
         <v-card-actions>
           <v-row>
@@ -80,10 +80,6 @@ export default {
             },
           ],
         },
-        hasError: {
-          name: false,
-          cost: false,
-        },
       },
       dialog: {
         selectedProduct: {
@@ -116,19 +112,13 @@ export default {
       this.dialog.selectedProduct = JSON.parse(JSON.stringify(item))
       this.dialog.show = true
     },
-    errorNameHandle(value) {
-      this.form.hasError.name = value
-    },
-    errorCostHandle(value) {
-      this.form.hasError.cost = value
-    },
     closeDialog(saveBtn) {
       if (!saveBtn) {
         this.setDefaultDialogValues()
         return
       }
 
-      if (this.isValidForm && this.isValidNumber(this.dialog.selectedProduct.cost)) {
+      if (this.$refs.form.validate()) {
         this.UPDATE_PRODUCT(this.dialog.selectedProduct)
         this.setDefaultDialogValues()
         this.$notify({
@@ -146,8 +136,6 @@ export default {
     },
     setDefaultDialogValues() {
       this.dialog.show = false
-      this.form.hasError.cost = false
-      this.form.hasError.name = false
       this.dialog.selectedProduct = {
         name: "",
         cost: 1,
@@ -174,9 +162,6 @@ export default {
   },
   computed: {
     ...mapState("products", ["products"]),
-    isValidForm() {
-      return !this.form.hasError.cost && !this.form.hasError.name
-    },
   },
 }
 </script>
