@@ -94,7 +94,7 @@ export default {
     ...mapActions("clients", ["fetchClients"]),
     ...mapMutations("orders", ["ADD_ORDER"]),
     submitOrderForm() {
-      if (this.$refs.form.validate() && this.form.date !== null) {
+      if (this.$refs.form.validate() && this.form.date !== null && this.order.cart.length !== 0) {
         this.order.date = this.getFormattedDate(this.form.date)
         this.cartCountsToInit()
         this.ADD_ORDER(this.order)
