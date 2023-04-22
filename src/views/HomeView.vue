@@ -1,19 +1,19 @@
 <template>
   <v-container>
     <h1>Zadanie testowe</h1>
-    <ProductList :products="products" :orders="orders" />
+    <ProductList :products="products" />
 
     <v-spacer class="mt-5" />
-    <Calendar :products="products" :orders="orders" :clients="clients" />
+    <Calendar :orders="orders" />
 
     <v-spacer class="mt-5" />
-    <ClientFilterList :clients="clients" :orders="orders" :products="products" />
+    <ClientFilterList :clients="clients" />
 
     <v-spacer class="mt-5" />
-    <TableFilteredOrders :products="products" :orders="orders" :clients="clients" />
+    <TableFilteredOrders :orders="orders" />
 
     <v-spacer class="mt-5" />
-    <Chart :products="products" :orders="orders" />
+    <Chart :orders="orders" />
   </v-container>
 </template>
 

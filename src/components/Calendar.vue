@@ -80,15 +80,7 @@ import { mapGetters } from "vuex"
 
 export default {
   props: {
-    products: {
-      type: Array,
-      default: [],
-    },
     orders: {
-      type: Array,
-      default: [],
-    },
-    clients: {
       type: Array,
       default: [],
     },

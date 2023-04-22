@@ -39,14 +39,11 @@
 <script>
 import { getAutocompleteMonths } from "@/methods/tAutocompleteMonths.methods"
 import { getFilteredOrdersByDate } from "@/methods/getFilteredOrdersByDate.methods"
+import {mapGetters} from "vuex";
 
 export default {
   props: {
     orders: {
-      type: Array,
-      default: [],
-    },
-    products: {
       type: Array,
       default: [],
     },
@@ -78,14 +75,6 @@ export default {
   methods: {
     getAutocompleteMonths,
     getFilteredOrdersByDate,
-    getProductIdsMap() {
-      const productIDsMap = new Map()
-      for (const productItem of this.products) {
-        productIDsMap.set(productItem.name, productItem.id)
-      }
-
-      return productIDsMap
-    },
 
     handleSelectChartFilteredOrdersFrom(selectedDate) {
       const selectedDateIndex = this.chartFilteredOrders.startMonthsAutocomplete.findIndex((item) => item.value === selectedDate)
@@ -164,5 +153,8 @@ export default {
       return this.chartFilteredOrders.startMonthsAutocomplete[lastMonthIndex]
     },
   },
+  computed: {
+    ...mapGetters("products", ["getProductIdsMap"]),
+  }
 }
 </script>

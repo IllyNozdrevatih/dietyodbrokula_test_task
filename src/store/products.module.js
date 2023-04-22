@@ -22,5 +22,21 @@ export const productsModule = {
     getProductIDsArray: (state) => () => {
       return state.products.map((productItem) => productItem.id)
     },
+    getAutocompleteProducts: (state) => () => {
+      return state.products.map((productsItem) => {
+        return {
+          text: productsItem.name,
+          value: productsItem.id,
+        }
+      })
+    },
+    getProductIdsMap: (state) => () => {
+      const productIDsMap = new Map()
+      for (const productItem of state.products) {
+        productIDsMap.set(productItem.name, productItem.id)
+      }
+
+      return productIDsMap
+    },
   },
 }

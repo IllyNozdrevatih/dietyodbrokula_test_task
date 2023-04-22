@@ -33,14 +33,6 @@ export default {
       type: Array,
       default: [],
     },
-    orders: {
-      type: Array,
-      default: [],
-    },
-    products: {
-      type: Array,
-      default: [],
-    },
   },
   data() {
     return {
@@ -77,22 +69,9 @@ export default {
       },
     }
   },
-  methods: {
-    getOrdersByClientId(clientId) {
-      const clientOrders = []
-
-      for (const orderItem of this.orders) {
-        const isClientOrder = orderItem.clientId === clientId
-
-        if (isClientOrder) clientOrders.push(orderItem)
-      }
-
-      return clientOrders
-    },
-  },
   computed: {
     ...mapGetters("products", ["getProductById"]),
-    ...mapGetters("orders", ["getCostCartOrders", "getCountCartOrders"]),
+    ...mapGetters("orders", ["getCostCartOrders", "getCountCartOrders", "getOrdersByClientId"]),
   },
 }
 </script>

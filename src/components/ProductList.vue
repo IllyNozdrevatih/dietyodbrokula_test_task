@@ -24,10 +24,6 @@ export default {
       type: Array,
       default: [],
     },
-    orders: {
-      type: Array,
-      default: [],
-    },
   },
   data() {
     return {

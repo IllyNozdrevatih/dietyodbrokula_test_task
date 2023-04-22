@@ -6,7 +6,7 @@
         <v-col lg="6">
           <v-autocomplete
             v-model="tableFilteredOrders.products"
-            :items="getAutocompleteProducts(products)"
+            :items="getAutocompleteProducts()"
             @change="handleSelectTableFilteredProducts"
             multiple
           ></v-autocomplete>
@@ -61,15 +61,7 @@ import { getAutocompleteMonths } from "@/methods/tAutocompleteMonths.methods"
 
 export default {
   props: {
-    products: {
-      type: Array,
-      default: [],
-    },
     orders: {
-      type: Array,
-      default: [],
-    },
-    clients: {
       type: Array,
       default: [],
     },
@@ -201,17 +193,9 @@ export default {
     getTableFilteredFirstMonth() {
       return this.tableFilteredOrders.startMonthsAutocomplete[0]
     },
-    getAutocompleteProducts(products) {
-      return products.map((productsItem) => {
-        return {
-          text: productsItem.name,
-          value: productsItem.id,
-        }
-      })
-    },
   },
   computed: {
-    ...mapGetters("products", ["getProductIDsArray", "getProductById"]),
+    ...mapGetters("products", ["getProductIDsArray", "getProductById", "getAutocompleteProducts"]),
     ...mapGetters("clients", ["getClientById"]),
     ...mapGetters("orders", ["getCostCartOrders", "getCountCartOrders"]),
   },

@@ -37,6 +37,17 @@ export const ordersModule = {
       })
       return Math.floor(cost)
     },
+    getOrdersByClientId: (state) => (clientId) => {
+      const clientOrders = []
+
+      for (const orderItem of state.orders) {
+        const isClientOrder = orderItem.clientId === clientId
+
+        if (isClientOrder) clientOrders.push(orderItem)
+      }
+
+      return clientOrders
+    },
     getCountCartOrders: (state) => (cartOrders) => {
       let count = 0
       cartOrders.forEach((orderItem) => (count += orderItem.count))
