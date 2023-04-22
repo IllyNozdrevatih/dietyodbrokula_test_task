@@ -10,6 +10,9 @@
       <template v-slot:item.orders="{ item }">
         <div class="p-2" v-text="getOrdersProductById(item.id)" />
       </template>
+      <template v-slot:item.amout_cost="{ item }">
+        <div class="p-2" v-text="getAmountCost(item.id, item.cost)"></div>
+      </template>
     </v-data-table>
   </div>
 </template>
@@ -39,9 +42,17 @@ export default {
           { text: "Сena", value: "cost", sortable: true },
           { text: "Portret", value: "image", sortable: false },
           { text: "Zamówienie", value: "orders", sortable: false },
+          { text: "Ogólna cena", value: "amout_cost", sortable: false },
         ],
       },
     }
+  },
+  methods: {
+    getAmountCost(productId, cost) {
+      const orders = this.getOrdersProductById(productId)
+
+      return Math.floor(orders * cost)
+    },
   },
   computed: {
     ...mapGetters("products", ["getProductIDsArray"]),
