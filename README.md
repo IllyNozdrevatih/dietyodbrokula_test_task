@@ -1,5 +1,7 @@
 # dietyodbrokula
 
+## Node 16.13.2
+
 ## Project setup
 ```
 npm install
