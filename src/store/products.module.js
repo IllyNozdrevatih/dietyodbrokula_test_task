@@ -15,9 +15,8 @@ export const productsModule = {
     },
   },
   actions: {
-    fetchProducts({ commit }, data = []) {
-      const productData = data.length === 0 ? productsMockup : data
-      commit("PRODUCTS_UPDATE", productData)
+    fetchProducts({ commit }) {
+      commit("PRODUCTS_UPDATE", productsMockup)
     },
   },
   getters: {
