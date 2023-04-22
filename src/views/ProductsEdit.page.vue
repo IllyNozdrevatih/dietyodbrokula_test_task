@@ -132,6 +132,17 @@ export default {
       if (this.isValidForm && this.isValidCost(this.dialog.selectedProduct.cost)) {
         this.UPDATE_PRODUCT(this.dialog.selectedProduct)
         this.setDefaultDialogValues()
+        this.$notify({
+          title: "Zaktualizowane",
+          text: "Produkt zaktualizowany",
+          type: "success",
+        })
+      } else {
+        this.$notify({
+          title: "Błąd",
+          text: "Sprawdź Formularz",
+          type: "error",
+        })
       }
     },
     setDefaultDialogValues() {

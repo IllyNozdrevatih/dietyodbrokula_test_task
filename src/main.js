@@ -4,6 +4,7 @@ import router from "./router"
 import store from "./store"
 import vuetify from "./plugins/vuetify"
 import "./plugins/apexcharts"
+import "./plugins/vue-notification"
 
 Vue.config.productionTip = false
 
