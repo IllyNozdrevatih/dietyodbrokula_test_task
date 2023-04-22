@@ -93,7 +93,7 @@ export default {
     ...mapActions("products", ["fetchProducts"]),
     ...mapActions("clients", ["fetchClients"]),
     ...mapMutations("orders", ["ADD_ORDER"]),
-    submitOrderForm() {
+    async submitOrderForm() {
       if (this.$refs.form.validate() && this.form.date !== null && this.order.cart.length !== 0) {
         this.order.date = this.getFormattedDate(this.form.date)
         this.cartCountsToInit()
@@ -103,9 +103,9 @@ export default {
           text: "Zamówienie zrealizowane",
           type: "success",
         })
-        this.$refs.form.reset()
-        this.order.date = null
-        this.form.date = null
+        // this.$refs.form.reset()
+        // this.order.date = null
+        // this.form.date = null
       } else {
         this.$notify({
           title: "Błąd",
