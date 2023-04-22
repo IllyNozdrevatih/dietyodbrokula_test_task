@@ -126,8 +126,11 @@ export default {
       return new Date(date).toDateString()
     },
     isValidNumber(number) {
-      if (new String(number).indexOf("0") === 0) return false
-      return new String(number).indexOf(".") === -1
+      const numberString = new String(number)
+
+      if (numberString.length === 0) return false
+      if (numberString.indexOf("0") === 0) return false
+      return numberString.indexOf(".") === -1
     },
     cartCountsToInit() {
       if (this.order.cart.length === 0) return

@@ -155,7 +155,9 @@ export default {
     },
     isValidNumber(cost) {
       const numberString = new String(cost)
+
       if (numberString.length === 0) return false
+      if (numberString.indexOf("0") === 0) return false
 
       const commaIndex = numberString.indexOf(".")
 
