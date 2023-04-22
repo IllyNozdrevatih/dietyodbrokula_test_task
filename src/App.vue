@@ -6,6 +6,7 @@
         <v-btn class="box-shadow-none" color="primary" @click="navigationRouteTo({ name: 'productsEdit' })"
           >Edytuj Lista produktów</v-btn
         >
+        <v-btn class="box-shadow-none" color="primary" @click="navigationRouteTo({ name: 'AddOrder' })">Zamówić towar</v-btn>
       </div>
     </v-app-bar>
 

@@ -1,61 +1,59 @@
 <template>
-  <div>
-    <v-container>
-      <h1>Lista produktów</h1>
-      <h2>CF.05 Ekran do zarządzania listą produktów</h2>
-      <v-data-table :headers="tableProducts.headers" :items="products" :items-per-page="10" class="elevation-1">
-        <template v-slot:item.image="{ item }">
-          <div class="p-2">
-            <v-img :src="item.image_url" :alt="item.name" width="50px" height="50px"></v-img>
-          </div>
-        </template>
-        <template v-slot:item.edit="{ item }">
-          <v-btn @click="openDialog(item)" icon class="ma-2">
-            <v-icon>mdi-pencil</v-icon>
-          </v-btn>
-        </template>
-      </v-data-table>
-      <v-dialog v-model="dialog.show" width="auto">
-        <v-card>
-          <v-card-actions>
-            <v-row>
-              <v-col lg="6">
-                <v-text-field
-                  v-model="dialog.selectedProduct.name"
-                  :rules="form.rules.name"
-                  counter="20"
-                  hint="This field uses counter prop"
-                  label="Produkt"
-                  @update:error="errorNameHandle"
-                ></v-text-field>
-              </v-col>
-              <v-col lg="6">
-                <v-text-field
-                  v-model="dialog.selectedProduct.cost"
-                  :rules="form.rules.cost"
-                  type="number"
-                  counter="6"
-                  hint="This field uses counter prop"
-                  label="Сena"
-                  @update:error="errorCostHandle"
-                ></v-text-field
-              ></v-col>
-            </v-row>
-          </v-card-actions>
-          <v-card-actions>
-            <v-row>
-              <v-col lg="12">
-                <v-btn color="success" block @click="closeDialog(true)">Save</v-btn>
-              </v-col>
-              <v-col lg="12">
-                <v-btn color="error" block @click="closeDialog(false)">Close Dialog</v-btn>
-              </v-col>
-            </v-row>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
-    </v-container>
-  </div>
+  <v-container>
+    <h1>Lista produktów</h1>
+    <h2>CF.05 Ekran do zarządzania listą produktów</h2>
+    <v-data-table :headers="tableProducts.headers" :items="products" :items-per-page="10" class="elevation-1">
+      <template v-slot:item.image="{ item }">
+        <div class="p-2">
+          <v-img :src="item.image_url" :alt="item.name" width="50px" height="50px"></v-img>
+        </div>
+      </template>
+      <template v-slot:item.edit="{ item }">
+        <v-btn @click="openDialog(item)" icon class="ma-2">
+          <v-icon>mdi-pencil</v-icon>
+        </v-btn>
+      </template>
+    </v-data-table>
+    <v-dialog v-model="dialog.show" width="auto">
+      <v-card>
+        <v-card-actions>
+          <v-row>
+            <v-col lg="6">
+              <v-text-field
+                v-model="dialog.selectedProduct.name"
+                :rules="form.rules.name"
+                counter="20"
+                hint="This field uses counter prop"
+                label="Produkt"
+                @update:error="errorNameHandle"
+              ></v-text-field>
+            </v-col>
+            <v-col lg="6">
+              <v-text-field
+                v-model="dialog.selectedProduct.cost"
+                :rules="form.rules.cost"
+                type="number"
+                counter="6"
+                hint="This field uses counter prop"
+                label="Сena"
+                @update:error="errorCostHandle"
+              ></v-text-field
+            ></v-col>
+          </v-row>
+        </v-card-actions>
+        <v-card-actions>
+          <v-row>
+            <v-col lg="12">
+              <v-btn color="success" block @click="closeDialog(true)">Zapisać</v-btn>
+            </v-col>
+            <v-col lg="12">
+              <v-btn color="error" block @click="closeDialog(false)">Anulować</v-btn>
+            </v-col>
+          </v-row>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
+  </v-container>
 </template>
 
 <script>
@@ -78,7 +76,7 @@ export default {
               return new String(v).length <= 6 || "Max 6 characters"
             },
             (v) => {
-              return this.isValidCost(v)
+              return this.isValidNumber(v)
             },
           ],
         },
@@ -130,7 +128,7 @@ export default {
         return
       }
 
-      if (this.isValidForm && this.isValidCost(this.dialog.selectedProduct.cost)) {
+      if (this.isValidForm && this.isValidNumber(this.dialog.selectedProduct.cost)) {
         this.UPDATE_PRODUCT(this.dialog.selectedProduct)
         this.setDefaultDialogValues()
         this.$notify({
@@ -155,7 +153,7 @@ export default {
         cost: 1,
       }
     },
-    isValidCost(cost) {
+    isValidNumber(cost) {
       const numberString = new String(cost)
       if (numberString.length === 0) return false
 

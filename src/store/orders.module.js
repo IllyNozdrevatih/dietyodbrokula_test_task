@@ -9,6 +9,10 @@ export const ordersModule = {
     ORDERS_UPDATE(state, payload) {
       state.orders = payload
     },
+    ADD_ORDER(state, orderItem) {
+      orderItem.id = state.orders.length
+      state.orders.push(orderItem)
+    },
   },
   actions: {
     fetchOrders({ commit }) {

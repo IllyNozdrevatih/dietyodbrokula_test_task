@@ -33,8 +33,10 @@ export default {
     if (this.products.length === 0) {
       this.fetchProducts()
     }
+    if (this.orders.length === 0) {
+      this.fetchOrders()
+    }
     this.fetchClients()
-    this.fetchOrders()
   },
   methods: {
     ...mapActions("products", ["fetchProducts"]),
