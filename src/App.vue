@@ -1,32 +1,12 @@
 <template>
   <v-app>
-    <v-app-bar app color="primary" dark>
+    <v-app-bar class="justify-center" app color="primary" dark>
       <div class="d-flex align-center">
-        <v-img
-          alt="Vuetify Logo"
-          class="shrink mr-2"
-          contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
-          transition="scale-transition"
-          width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
-        />
+        <v-btn class="box-shadow-none" color="primary" @click="navigationRouteTo({ name: 'home' })">Glovna</v-btn>
+        <v-btn class="box-shadow-none" color="primary" @click="navigationRouteTo({ name: 'productsEdit' })"
+          >Edytuj Lista produktów</v-btn
+        >
       </div>
-
-      <v-spacer></v-spacer>
-
-      <v-btn href="https://github.com/vuetifyjs/vuetify/releases/latest" target="_blank" text>
-        <span class="mr-2">Latest Release</span>
-        <v-icon>mdi-open-in-new</v-icon>
-      </v-btn>
     </v-app-bar>
 
     <v-main>
@@ -39,5 +19,21 @@
 <script>
 export default {
   name: "App",
+  methods: {
+    navigationRouteTo(route) {
+      if (this.$route.name === route.name) return
+      this.$router.push(route)
+    },
+  },
 }
 </script>
+
+<style lang="scss">
+.box-shadow-none {
+  box-shadow: none !important;
+}
+.v-toolbar__content,
+.v-toolbar__extension {
+  justify-content: center;
+}
+</style>

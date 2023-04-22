@@ -2,6 +2,7 @@
   <div>
     <v-container>
       <h1>Lista produktów</h1>
+      <h2>CF.05 Ekran do zarządzania listą produktów</h2>
       <v-data-table :headers="tableProducts.headers" :items="products" :items-per-page="10" class="elevation-1">
         <template v-slot:item.image="{ item }">
           <div class="p-2">
@@ -156,11 +157,16 @@ export default {
     },
     isValidCost(cost) {
       const numberString = new String(cost)
+      if (numberString.length === 0) return false
 
       const commaIndex = numberString.indexOf(".")
+
+      if (commaIndex === 0) return false
+
       if (commaIndex === -1 && numberString.length) {
         return true
       }
+
       const lengthAfterComma = numberString.length - (commaIndex + 1)
 
       return lengthAfterComma <= 2

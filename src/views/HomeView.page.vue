@@ -30,7 +30,9 @@ export default {
   name: "Home",
   components: { Chart, TableFilteredOrders, Calendar, ClientFilterList, ProductList },
   mounted() {
-    this.fetchProducts()
+    if (this.products.length === 0) {
+      this.fetchProducts()
+    }
     this.fetchClients()
     this.fetchOrders()
   },
