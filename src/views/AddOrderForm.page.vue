@@ -103,6 +103,9 @@ export default {
           text: "Zamówienie zrealizowane",
           type: "success",
         })
+        this.$refs.form.reset()
+        this.order.date = null
+        this.form.date = null
       } else {
         this.$notify({
           title: "Błąd",
@@ -137,6 +140,18 @@ export default {
       this.order.cart.forEach((cartItem) => {
         cartItem.count = +cartItem.count
       })
+    },
+    setDefaultValuesToOrder() {
+      this.order = {
+        date: null,
+        clientId: null,
+        cart: [
+          {
+            count: 0,
+            productId: null,
+          },
+        ],
+      }
     },
     increment(el) {
       el = parseInt(el, 10) + 1
