@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>CF.01 Prezentowanie produktów i wartości liczbowych dotyczących sprzedaży</h2>
-    <v-data-table :headers="tableOrders.headers" :items="products" :items-per-page="10" class="elevation-1">
+    <v-data-table :headers="tableProducts.headers" :items="products" :items-per-page="10" class="elevation-1">
       <template v-slot:item.image="{ item }">
         <div class="p-2">
           <v-img :src="item.image_url" :alt="item.name" width="50px" height="50px"></v-img>
@@ -27,7 +27,7 @@ export default {
   },
   data() {
     return {
-      tableOrders: {
+      tableProducts: {
         headers: [
           {
             text: "ID",

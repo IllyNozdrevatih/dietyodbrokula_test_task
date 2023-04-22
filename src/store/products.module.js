@@ -9,10 +9,15 @@ export const productsModule = {
     PRODUCTS_UPDATE(state, payload) {
       state.products = payload
     },
+    UPDATE_PRODUCT(state, updatedProduct) {
+      const productIndex = state.products.findIndex((product) => product.id === updatedProduct.id)
+      Object.assign(state.products[productIndex], updatedProduct)
+    },
   },
   actions: {
-    fetchProducts({ commit }) {
-      commit("PRODUCTS_UPDATE", productsMockup)
+    fetchProducts({ commit }, data = []) {
+      const productData = data.length === 0 ? productsMockup : data
+      commit("PRODUCTS_UPDATE", productData)
     },
   },
   getters: {
