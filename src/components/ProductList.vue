@@ -8,13 +8,15 @@
         </div>
       </template>
       <template v-slot:item.orders="{ item }">
-        <div class="p-2" v-text="getProductOrdersById(item.id)" />
+        <div class="p-2" v-text="getOrdersProductById(item.id)" />
       </template>
     </v-data-table>
   </div>
 </template>
 
 <script>
+import { mapGetters } from "vuex"
+
 export default {
   name: "ProductList",
   props: {
@@ -45,19 +47,9 @@ export default {
       },
     }
   },
-  methods: {
-    getProductOrdersById(productId) {
-      let countProductOrders = 0
-      for (const orderItem of this.orders) {
-        const productIndex = orderItem.cart.findIndex((productItem) => productItem.productId === productId)
-        const hasProductInCart = productIndex !== -1
-
-        if (hasProductInCart) {
-          countProductOrders += orderItem.cart[productIndex].count
-        }
-      }
-      return countProductOrders
-    },
+  computed: {
+    ...mapGetters("products", ["getProductIDsArray"]),
+    ...mapGetters("orders", ["getOrdersProductById"]),
   },
 }
 </script>

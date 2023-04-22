@@ -52,10 +52,11 @@ export default {
     },
   },
   mounted() {
-    this.chartFilteredOrders.startMonthsAutocomplete = this.getAutocompleteMonths(this.orders)
-    this.chartFilteredOrders.endMonthsAutocomplete = this.getAutocompleteMonths(this.orders)
-
-    this.$refs.apexchart.updateOptions({ labels: [...this.getProductIdsMap().keys()] })
+    this.$nextTick(() => {
+      this.chartFilteredOrders.startMonthsAutocomplete = this.getAutocompleteMonths(this.orders)
+      this.chartFilteredOrders.endMonthsAutocomplete = this.getAutocompleteMonths(this.orders)
+      this.$refs.apexchart.updateOptions({ labels: [...this.getProductIdsMap().keys()] })
+    })
   },
   data() {
     return {

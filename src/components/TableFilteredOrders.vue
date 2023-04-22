@@ -36,11 +36,11 @@
         <div v-text="new Date(item.date).toLocaleDateString('pl-PL')" />
       </template>
       <template v-slot:item.clientId="{ item }">
-        <div v-text="getClientById(item.clientId, clients).name" />
+        <div v-text="getClientById(item.clientId).name" />
       </template>
       <template v-slot:item.cart="{ item }">
         <div v-for="(productOrderObject, index) of item.cart" :key="`product-order-${index}`" class="d-flex">
-          <div class="pr-2">{{ getProductById(productOrderObject.productId, products).name }}:</div>
+          <div class="pr-2">{{ getProductById(productOrderObject.productId).name }}:</div>
           <div v-text="productOrderObject.count"></div>
         </div>
       </template>
@@ -48,19 +48,15 @@
         <div v-text="getCountCartOrders(item.cart)" />
       </template>
       <template v-slot:item.cost="{ item }">
-        <div v-text="getCostCartOrders(item.cart, products)" />
+        <div v-text="getCostCartOrders(item.cart)" />
       </template>
     </v-data-table>
   </div>
 </template>
 
 <script>
-import { getAutocompleteProducts } from "@/methods/getAutocompleteProducts.methods"
+import { mapGetters } from "vuex"
 import { getFilteredOrdersByDate } from "@/methods/getFilteredOrdersByDate.methods"
-import { getClientById } from "@/methods/getClientById.methods"
-import { getProductById } from "@/methods/getProductById.methods"
-import { getCountCartOrders } from "@/methods/getCountCartOrders.methods"
-import { getCostCartOrders } from "@/methods/getCostCartOrders.methods"
 import { getAutocompleteMonths } from "@/methods/tAutocompleteMonths.methods"
 
 export default {
@@ -80,9 +76,11 @@ export default {
   },
   name: "TableFilteredOrders",
   mounted() {
-    this.tableFilteredOrders.startMonthsAutocomplete = this.getAutocompleteMonths(this.orders)
-    this.tableFilteredOrders.endMonthsAutocomplete = this.getAutocompleteMonths(this.orders)
-    this.tableFilteredOrders.products = this.getProductIDsArray()
+    this.$nextTick(() => {
+      this.tableFilteredOrders.startMonthsAutocomplete = this.getAutocompleteMonths(this.orders)
+      this.tableFilteredOrders.endMonthsAutocomplete = this.getAutocompleteMonths(this.orders)
+      this.tableFilteredOrders.products = this.getProductIDsArray()
+    })
   },
   data() {
     return {
@@ -111,13 +109,8 @@ export default {
     }
   },
   methods: {
-    getAutocompleteProducts,
     getAutocompleteMonths,
     getFilteredOrdersByDate,
-    getClientById,
-    getProductById,
-    getCountCartOrders,
-    getCostCartOrders,
     handleSelectTableFilteredProducts(selectedProduct) {
       if (this.tableFilteredOrders.startMonths === null && this.tableFilteredOrders.endMonths === null) {
         return
@@ -208,10 +201,19 @@ export default {
     getTableFilteredFirstMonth() {
       return this.tableFilteredOrders.startMonthsAutocomplete[0]
     },
-
-    getProductIDsArray() {
-      return this.products.map((productItem) => productItem.id)
+    getAutocompleteProducts(products) {
+      return products.map((productsItem) => {
+        return {
+          text: productsItem.name,
+          value: productsItem.id,
+        }
+      })
     },
+  },
+  computed: {
+    ...mapGetters("products", ["getProductIDsArray", "getProductById"]),
+    ...mapGetters("clients", ["getClientById"]),
+    ...mapGetters("orders", ["getCostCartOrders", "getCountCartOrders"]),
   },
 }
 </script>

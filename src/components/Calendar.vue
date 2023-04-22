@@ -61,7 +61,7 @@
               :key="`calendar-cart-item-${index}`"
               class="d-flex"
             >
-              <div class="pr-2">{{ getProductById(cartItem.productId, products).name }}:</div>
+              <div class="pr-2">{{ getProductById(cartItem.productId).name }}:</div>
               <div v-text="cartItem.count"></div>
             </div>
           </v-card-text>
@@ -75,9 +75,8 @@
 </template>
 
 <script>
-import { getProductById } from "@/methods/getProductById.methods"
 import { getRandomArbitrary } from "@/mockups/orders.generator"
-import { getClientById } from "@/methods/getClientById.methods"
+import { mapGetters } from "vuex"
 
 export default {
   props: {
@@ -122,26 +121,22 @@ export default {
   },
   mounted() {
     this.$refs.calendar.checkChange()
-    this.calendar.names = this.getClientsNames()
-    this.generateCalendarEvents()
+    this.$nextTick(() => {
+      this.calendar.names = this.getClientsNames()
+      this.generateCalendarEvents()
+    })
   },
   methods: {
-    getProductById,
-    getClientById,
     getOrderCartById(orderId) {
       const orderIndex = this.orders.findIndex((orderItem) => orderItem.id === orderId)
       if (orderIndex === -1) return []
       return this.orders[orderIndex].cart
     },
-    getClientsNames() {
-      if (this.clients.length === 0) return []
-      return this.clients.map((clientItem) => clientItem.name)
-    },
 
     generateCalendarEvents() {
       for (const orderItem of this.orders) {
         const orderItemEntryDate = new Date(orderItem.date)
-        const client = this.getClientById(orderItem.clientId, this.clients)
+        const client = this.getClientById(orderItem.clientId)
 
         this.calendar.events.push({
           orderId: orderItem.id,
@@ -170,6 +165,10 @@ export default {
 
       nativeEvent.stopPropagation()
     },
+  },
+  computed: {
+    ...mapGetters("products", ["getProductById"]),
+    ...mapGetters("clients", ["getClientsNames", "getClientById"]),
   },
 }
 </script>

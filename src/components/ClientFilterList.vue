@@ -9,7 +9,7 @@
       </template>
       <template v-slot:item.cart="{ item }">
         <div v-for="(productOrderObject, index) of item.cart" :key="`client-product-order-${index}`" class="d-flex">
-          <div class="pr-2">{{ getProductById(productOrderObject.productId, products).name }}:</div>
+          <div class="pr-2">{{ getProductById(productOrderObject.productId).name }}:</div>
           <div v-text="productOrderObject.count"></div>
         </div>
       </template>
@@ -17,16 +17,14 @@
         <div v-text="getCountCartOrders(item.cart)" />
       </template>
       <template v-slot:item.cost="{ item }">
-        <div v-text="getCostCartOrders(item.cart, products)" />
+        <div v-text="getCostCartOrders(item.cart)" />
       </template>
     </v-data-table>
   </div>
 </template>
 
 <script>
-import { getProductById } from "@/methods/getProductById.methods"
-import { getCountCartOrders } from "@/methods/getCountCartOrders.methods"
-import { getCostCartOrders } from "@/methods/getCostCartOrders.methods"
+import { mapGetters } from "vuex"
 
 export default {
   name: "ClientFilterList",
@@ -80,9 +78,6 @@ export default {
     }
   },
   methods: {
-    getProductById,
-    getCountCartOrders,
-    getCostCartOrders,
     getOrdersByClientId(clientId) {
       const clientOrders = []
 
@@ -94,6 +89,10 @@ export default {
 
       return clientOrders
     },
+  },
+  computed: {
+    ...mapGetters("products", ["getProductById"]),
+    ...mapGetters("orders", ["getCostCartOrders", "getCountCartOrders"]),
   },
 }
 </script>
