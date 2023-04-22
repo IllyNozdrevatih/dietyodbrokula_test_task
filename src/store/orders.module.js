@@ -19,11 +19,10 @@ export const ordersModule = {
     getOrdersProductById: (state) => (productId) => {
       let countProductOrders = 0
       for (const orderItem of state.orders) {
-        const productIndex = orderItem.cart.findIndex((productItem) => productItem.productId === productId)
-        const hasProductInCart = productIndex !== -1
+        const filteredCart = orderItem.cart.filter((cartItem) => cartItem.productId === productId)
 
-        if (hasProductInCart) {
-          countProductOrders += orderItem.cart[productIndex].count
+        if (filteredCart.length) {
+          filteredCart.forEach((cartItem) => (countProductOrders += cartItem.count))
         }
       }
       return countProductOrders
@@ -52,6 +51,6 @@ export const ordersModule = {
       let count = 0
       cartOrders.forEach((orderItem) => (count += orderItem.count))
       return count
-    }
+    },
   },
 }
