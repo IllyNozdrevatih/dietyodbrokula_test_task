@@ -27,7 +27,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
               v-model="datePicker.date"
-              label="Picker in menu"
+              label="Date"
               prepend-icon="mdi-calendar"
               readonly
               v-bind="attrs"
@@ -36,7 +36,7 @@
           </template>
           <v-date-picker v-model="datePicker.date" no-title scrollable>
             <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="datePicker.menu = false"> Cancel </v-btn>
+            <v-btn text color="primary" @click="datePicker.menu = false"> Anulować </v-btn>
             <v-btn text color="primary" @click="$refs.menu.save(datePicker.date)"> OK </v-btn>
           </v-date-picker>
         </v-menu>
