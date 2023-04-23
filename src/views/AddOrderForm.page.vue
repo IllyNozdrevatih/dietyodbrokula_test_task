@@ -34,7 +34,7 @@
               v-on="on"
             ></v-text-field>
           </template>
-          <v-date-picker v-model="datePicker.date" no-title scrollable>
+          <v-date-picker v-model="datePicker.date" :allowed-dates="allowedDates" no-title scrollable>
             <v-spacer></v-spacer>
             <v-btn text color="primary" @click="datePicker.menu = false"> Anulować </v-btn>
             <v-btn text color="primary" @click="$refs.menu.save(datePicker.date)"> OK </v-btn>
@@ -157,6 +157,9 @@ export default {
     },
     getFormattedDate(date) {
       return new Date(date).toDateString()
+    },
+    allowedDates(val) {
+      return new Date() < new Date(val)
     },
     isValidNumber(number) {
       const numberString = new String(number)
