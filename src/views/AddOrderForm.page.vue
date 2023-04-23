@@ -134,7 +134,7 @@ export default {
           type: "success",
         })
         this.$refs.form.reset()
-        this.datePicker.date = new Date()
+        this.datePicker.date = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10)
         this.order.date = null
       } else {
         this.$notify({
