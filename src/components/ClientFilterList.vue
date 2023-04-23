@@ -20,6 +20,18 @@
         <div v-text="getCostCartOrders(item.cart)" />
       </template>
     </v-data-table>
+
+    <v-row v-if="getAmountOrders.length > 0">
+      <v-col lg="4" cols="12">
+        <div class="headline">Ogólne zamówienie: {{ getAmountOrders.length }}</div>
+      </v-col>
+      <v-col lg="4" cols="12">
+        <div class="headline">łączna ilość produktów: {{ getAmountOrdersCountProducts }}</div>
+      </v-col>
+      <v-col lg="4" cols="12">
+        <div class="headline">Ogólna cena: {{ getAmountOrdersCostProducts }}</div>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
@@ -72,6 +84,38 @@ export default {
   computed: {
     ...mapGetters("products", ["getProductById"]),
     ...mapGetters("orders", ["getCostCartOrders", "getCountCartOrders", "getOrdersByClientId"]),
+
+    getAmountOrders() {
+      const clientOrders = this.getOrdersByClientId(this.tableClients.clientId)
+      return clientOrders.map((orderItem) => orderItem.cart)
+    },
+    getAmountOrdersCountProducts() {
+      const amountOrdersCountProducts = []
+
+      for (const cartItem of this.getAmountOrders) {
+        const cartItemOrdersCountsArray = cartItem.map((orderItem) => orderItem.count)
+
+        const initialValue = 0
+        const cartItemOrderCount = cartItemOrdersCountsArray.reduce((count, amount) => count + amount, initialValue)
+        amountOrdersCountProducts.push(cartItemOrderCount)
+      }
+
+      const initialValue = 0
+      return amountOrdersCountProducts.reduce((count, amount) => count + amount, initialValue)
+    },
+    getAmountOrdersCostProducts() {
+      const amountOrdersCostProducts = []
+
+      for (const cartItem of this.getAmountOrders) {
+        for (const orderItem of cartItem) {
+          const product = this.getProductById(orderItem.productId)
+          amountOrdersCostProducts.push(product.cost * orderItem.count)
+        }
+      }
+
+      const initialValue = 0
+      return Math.floor(amountOrdersCostProducts.reduce((count, amount) => count + amount, initialValue))
+    },
   },
 }
 </script>
