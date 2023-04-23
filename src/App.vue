@@ -1,16 +1,18 @@
 <template>
   <v-app>
-    <v-app-bar class="justify-center" app color="primary" dark>
-      <div class="d-flex align-center">
-        <v-btn class="box-shadow-none" color="primary" @click="navigationRouteTo({ name: 'home' })">Glovna</v-btn>
-        <v-btn class="box-shadow-none" color="primary" @click="navigationRouteTo({ name: 'productsEdit' })"
+    <v-app-bar class="justify-center" app color="primary" height="auto" dark>
+      <div class="app-menu-navigation">
+        <v-btn class="box-shadow-none mobile-fs-9" color="primary" @click="navigationRouteTo({ name: 'home' })">Glovna</v-btn>
+        <v-btn class="box-shadow-none mobile-fs-9" color="primary" @click="navigationRouteTo({ name: 'productsEdit' })"
           >Edytuj Lista produktów</v-btn
         >
-        <v-btn class="box-shadow-none" color="primary" @click="navigationRouteTo({ name: 'AddOrder' })">Zamówić towar</v-btn>
+        <v-btn class="box-shadow-none mobile-fs-9" color="primary" @click="navigationRouteTo({ name: 'AddOrder' })"
+          >Zamówić towar</v-btn
+        >
       </div>
     </v-app-bar>
 
-    <v-main>
+    <v-main class="app-container">
       <router-view />
       <notifications position="right bottom" />
     </v-main>
@@ -36,5 +38,16 @@ export default {
 .v-toolbar__content,
 .v-toolbar__extension {
   justify-content: center;
+}
+.app-menu-navigation {
+  display: flex;
+}
+.app-container {
+  padding-top: 50px;
+}
+.mobile-fs-9 {
+  @media (max-width: 640px) {
+    font-size: 9px !important;
+  }
 }
 </style>

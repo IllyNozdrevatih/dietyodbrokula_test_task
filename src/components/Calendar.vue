@@ -7,12 +7,12 @@
     </p>
     <v-sheet tile class="d-flex align-center">
       <v-row class="align-center">
-        <v-col lg="2">
+        <v-col md="2" cols="2" order="3" order-md="1">
           <v-btn icon class="ma-2" @click="$refs.calendar.prev()">
             <v-icon>mdi-chevron-left</v-icon>
           </v-btn>
         </v-col>
-        <v-col lg="5">
+        <v-col md="5" cols="6" order="1" order-md="2">
           <v-select
             v-model="calendar.type"
             locale="pl"
@@ -26,12 +26,12 @@
             label="Wygląd"
           ></v-select>
         </v-col>
-        <v-col lg="3" class="text-center">
+        <v-col md="3" cols="6" order="2" order-md="3" class="text-center">
           <v-toolbar-title v-if="$refs.calendar">
             {{ $refs.calendar.title }}
           </v-toolbar-title>
         </v-col>
-        <v-col lg="2" class="text-right">
+        <v-col md="2" cols="2" order="4" order-md="4" class="text-right">
           <v-btn icon class="ma-2" @click="$refs.calendar.next()">
             <v-icon>mdi-chevron-right</v-icon>
           </v-btn>

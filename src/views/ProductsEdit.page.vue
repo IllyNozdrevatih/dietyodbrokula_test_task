@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1>Lista produktów</h1>
-    <h2>CF.05 Ekran do zarządzania listą produktów</h2>
+    <h2>CF.06 Ekran do zarządzania listą produktów</h2>
     <v-data-table :headers="tableProducts.headers" :items="products" :items-per-page="10" class="elevation-1">
       <template v-slot:item.image="{ item }">
         <div class="p-2">

@@ -28,10 +28,10 @@
     </v-sheet>
     <apexchart
       ref="apexchart"
-      width="600"
       type="donut"
       :options="chartFilteredOrders.chart.options"
       :series="chartFilteredOrders.chart.series"
+      :width="chartWidth"
     ></apexchart>
   </div>
 </template>
@@ -39,7 +39,7 @@
 <script>
 import { getAutocompleteMonths } from "@/methods/tAutocompleteMonths.methods"
 import { getFilteredOrdersByDate } from "@/methods/getFilteredOrdersByDate.methods"
-import {mapGetters} from "vuex";
+import { mapGetters } from "vuex"
 
 export default {
   props: {
@@ -155,6 +155,14 @@ export default {
   },
   computed: {
     ...mapGetters("products", ["getProductIdsMap"]),
-  }
+
+    chartWidth() {
+      const body = document.querySelector("body")
+      if (body.clientWidth < 680) {
+        return "100%"
+      }
+      return "640px"
+    },
+  },
 }
 </script>

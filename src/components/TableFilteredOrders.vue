@@ -3,7 +3,7 @@
     <h2>CF.04 Podsumowanie sprzedaży (łączna ilość / łączna kwota) dla aktualnie ustawionych filtrów</h2>
     <v-sheet tile class="d-flex align-center">
       <v-row>
-        <v-col lg="6">
+        <v-col md="6" cols="12">
           <v-autocomplete
             v-model="tableFilteredOrders.products"
             :items="getAutocompleteProducts()"
@@ -11,7 +11,7 @@
             multiple
           ></v-autocomplete>
         </v-col>
-        <v-col lg="3">
+        <v-col md="3" cols="6">
           <v-select
             v-model="tableFilteredOrders.startMonths"
             :items="tableFilteredOrders.startMonthsAutocomplete"
@@ -20,7 +20,7 @@
             @change="handleSelectTableFilteredOrdersFrom"
           ></v-select>
         </v-col>
-        <v-col lg="3">
+        <v-col md="3" cols="6">
           <v-select
             v-model="tableFilteredOrders.endMonths"
             :items="tableFilteredOrders.endMonthsAutocomplete"
