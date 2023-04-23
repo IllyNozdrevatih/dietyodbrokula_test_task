@@ -15,7 +15,31 @@
 
       <div class="mb-4">
         <h3>Wybierz datę</h3>
-        <input type="date" v-model="form.date" />
+        <v-menu
+          ref="menu"
+          v-model="datePicker.menu"
+          :close-on-content-click="false"
+          :return-value.sync="datePicker.date"
+          transition="scale-transition"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="datePicker.date"
+              label="Picker in menu"
+              prepend-icon="mdi-calendar"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker v-model="datePicker.date" no-title scrollable>
+            <v-spacer></v-spacer>
+            <v-btn text color="primary" @click="datePicker.menu = false"> Cancel </v-btn>
+            <v-btn text color="primary" @click="$refs.menu.save(datePicker.date)"> OK </v-btn>
+          </v-date-picker>
+        </v-menu>
       </div>
       <div class="d-flex align-center">
         <h3>Lista produktów</h3>
@@ -64,8 +88,11 @@ export default {
   },
   data() {
     return {
+      datePicker: {
+        menu: false,
+        date: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().substr(0, 10),
+      },
       form: {
-        date: null,
         rules: {
           client: [(v) => v !== null],
           product: [(v) => v !== null],
@@ -94,8 +121,8 @@ export default {
     ...mapActions("clients", ["fetchClients"]),
     ...mapMutations("orders", ["ADD_ORDER"]),
     submitOrderForm() {
-      if (this.$refs.form.validate() && this.form.date !== null && this.order.cart.length !== 0) {
-        this.order.date = this.getFormattedDate(this.form.date)
+      if (this.$refs.form.validate() && this.order.cart.length !== 0) {
+        this.order.date = this.getFormattedDate(this.datePicker.date)
         this.cartCountsToInit()
         // deep copy
         const orderObject = JSON.parse(JSON.stringify(this.order))
@@ -108,7 +135,7 @@ export default {
         })
         this.$refs.form.reset()
         this.order.date = null
-        this.form.date = null
+        this.datePicker.date = new Date()
       } else {
         this.$notify({
           title: "Błąd",
