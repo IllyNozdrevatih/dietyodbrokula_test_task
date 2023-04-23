@@ -97,15 +97,18 @@ export default {
       if (this.$refs.form.validate() && this.form.date !== null && this.order.cart.length !== 0) {
         this.order.date = this.getFormattedDate(this.form.date)
         this.cartCountsToInit()
-        this.ADD_ORDER(this.order)
+        // deep copy
+        const orderObject = JSON.parse(JSON.stringify(this.order))
+
+        this.ADD_ORDER(orderObject)
         this.$notify({
           title: "Zaktualizowane",
           text: "Zamówienie zrealizowane",
           type: "success",
         })
-        // this.$refs.form.reset()
-        // this.order.date = null
-        // this.form.date = null
+        this.$refs.form.reset()
+        this.order.date = null
+        this.form.date = null
       } else {
         this.$notify({
           title: "Błąd",
