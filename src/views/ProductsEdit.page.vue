@@ -119,6 +119,9 @@ export default {
       }
 
       if (this.$refs.form.validate()) {
+        const cost = this.dialog.selectedProduct.cost
+        this.dialog.selectedProduct.cost = this.getSaveCost(cost)
+
         this.UPDATE_PRODUCT(this.dialog.selectedProduct)
         this.setDefaultDialogValues()
         this.$notify({
@@ -140,6 +143,14 @@ export default {
         name: "",
         cost: 1,
       }
+    },
+    getSaveCost(cost) {
+      const costString = new String(cost)
+      const commaIndex = costString.indexOf("0")
+      if (commaIndex === costString.length - 1) {
+        return +costString.replace(".", "")
+      }
+      return cost
     },
     isValidNumber(cost) {
       const numberString = new String(cost)
